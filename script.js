@@ -21,22 +21,28 @@ function loadTasks() {
             } else {
                 spanTaggle.style.textDecoration = 'line-through';
             }
-        })
+            task.done=done;
+            save=Task();
+        });
         const span = document.createElement('span');
-        span.textContent = taskTitle;
+        span.textContent = task.text;
+        if(task.done){
+            span.style.textDecoration='line-through'
+        }
+
         const button = document.createElement('button');
 
         button.textContent = 'Remover';
-        button.addEventListener('click', (event) => {
-            ul.removeChild(event.target.parentElement)
-        })
+        button.addEventListener('click', () => {
+            removeTasks(task);
+        });
 
 
         li.appendChild(inputCheckbox);
         li.appendChild(span);
         li.appendChild(button);
         ul.appendChild(li)
-        inputText.value = "";
+    
     });
 }
 
@@ -72,5 +78,16 @@ form.addEventListener("submit", (event) => {
         alert('Sua tarefa precisa ao menos 3 letras');
         return;
     }
+    const newTask = {
+        text: taskTitle,
+        done:false
+    };
+    
+    const tasks = JASON.parse(localStorage.getItem('tasks'))||[];
+    tasks.push(newTask);
+    localStorage.setItem('tasks',JASON.stringify(tasks))
+    inputText.value='';
+    loadTasks();
 
-})
+});
+    Window.anload=loadTasks;
